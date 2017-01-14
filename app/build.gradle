@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "ru.ksu.motygullin.chucknorris"
+        applicationId "ru.ksu.motygullin.marvel_encyclopedia"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
