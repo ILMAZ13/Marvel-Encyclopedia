@@ -41,6 +41,8 @@ public class LoaderCharactersFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+//        myAsync = new AsyncTaskGetCharacters(mTaskInterface);
+//        myAsync.execute();
     }
 
     public void startAsync(){

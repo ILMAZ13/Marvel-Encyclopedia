@@ -1,6 +1,7 @@
 package ru.itis.marvel_encyclopedia.asyncTasks;
 
 import android.os.AsyncTask;
+import android.util.JsonReader;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,15 +36,19 @@ public class AsyncTaskGetCharacters extends AsyncTask<Void,Void,List<Result>>{
     @Override
     protected List<Result> doInBackground(Void... voids) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://gateway.marvel.com/").addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://gateway.marvel.com/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         MarvelApi marvelApi = retrofit.create(MarvelApi.class);
 
-        Call<Data> charactersCall = marvelApi.getCharacters(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH);
+        Call<Data> charactersCall = marvelApi.getCharacters(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH, MarvelApi.LIMIT);
         List<Result> characters=null;
         try {
+
             Response<Data> response = charactersCall.execute();
+//            String s = response.message();
             Data data = response.body();
+//            System.out.println(data.getCount());
             characters = data.getResults();
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package ru.itis.marvel_encyclopedia.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,39 +19,33 @@ import ru.itis.marvel_encyclopedia.interfaces.TaskInterface;
 public class ListActivity extends AppCompatActivity implements TaskInterface{
     private RecyclerView rv;
     private ProgressBar progressBar;
+    private List<Result> characters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        Intent intent = getIntent();
+        characters = (List<Result>) intent.getSerializableExtra("characters");
         rv = (RecyclerView) findViewById(R.id.recycler_view_characters);
+        RecyclerCharactersAdapter adapter = new RecyclerCharactersAdapter(ListActivity.this, characters);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
+        rv.setAdapter(adapter);
 
-        if(getAsyncFragment().isRunning()){
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        else progressBar.setVisibility(View.GONE);
+//        if(getAsyncFragment().isRunning()){
+//            progressBar.setVisibility(View.VISIBLE);
+//        }
+//        else progressBar.setVisibility(View.GONE);
     }
 
-    private LoaderCharactersFragment getAsyncFragment(){
-        LoaderCharactersFragment fragment = (LoaderCharactersFragment) getSupportFragmentManager().findFragmentByTag(LoaderCharactersFragment.class.getName());
-        if(fragment==null){
-            fragment = new LoaderCharactersFragment();
-            getSupportFragmentManager().beginTransaction().add(fragment, LoaderCharactersFragment.class.getName()).commit();
-            fragment.startAsync();
-        }
-        return fragment;
-    }
+
 
     @Override
     public void OnTaskFinish(List<Result> characters) {
-        getAsyncFragment().stopAsync();
-        progressBar.setVisibility(View.GONE);
-        RecyclerCharactersAdapter adapter = new RecyclerCharactersAdapter(ListActivity.this, characters);
-        rv.setAdapter(adapter);
+
 
     }
 

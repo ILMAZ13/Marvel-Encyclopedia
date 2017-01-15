@@ -50,6 +50,7 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
     @Override
     public int getItemCount() {
         //TODO вернуть героев из asyncTask через фрагмент
+//        mCharacters.add(new Result());
         return mCharacters.size();
     }
 
