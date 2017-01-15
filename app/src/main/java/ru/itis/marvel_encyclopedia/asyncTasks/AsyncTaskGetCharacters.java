@@ -11,6 +11,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.itis.marvel_encyclopedia.POJO.Data;
+import ru.itis.marvel_encyclopedia.POJO.Marvel;
 import ru.itis.marvel_encyclopedia.POJO.Result;
 import ru.itis.marvel_encyclopedia.interfaces.MarvelApi;
 import ru.itis.marvel_encyclopedia.interfaces.TaskInterface;
@@ -41,15 +42,14 @@ public class AsyncTaskGetCharacters extends AsyncTask<Void,Void,List<Result>>{
                 .build();
         MarvelApi marvelApi = retrofit.create(MarvelApi.class);
 
-        Call<Data> charactersCall = marvelApi.getCharacters(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH, MarvelApi.LIMIT);
+        Call<Marvel> charactersCall = marvelApi.getCharacters(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH, MarvelApi.LIMIT);
         List<Result> characters=null;
         try {
 
-            Response<Data> response = charactersCall.execute();
-//            String s = response.message();
-            Data data = response.body();
-//            System.out.println(data.getCount());
-            characters = data.getResults();
+            Response<Marvel> response = charactersCall.execute();
+
+            Marvel marvel = response.body();
+            characters = marvel.getData().getResults();
         } catch (IOException e) {
             e.printStackTrace();
         }

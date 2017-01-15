@@ -20,10 +20,10 @@ public class Result implements Serializable {
     @SerializedName("modified")
     @Expose
     private String modified;
-    @SerializedName("resourceURI")
+    @SerializedName("thumbnail")
     @Expose
-    private String resourceURI;
-    @SerializedName("urls")
+    private Thumbnail thumbnail;
+
 
 
     public String getId() {
@@ -58,13 +58,11 @@ public class Result implements Serializable {
         this.modified = modified;
     }
 
-    public String getResourceURI() {
-        return resourceURI;
+    public Thumbnail getThumbnail() {
+        return thumbnail;
     }
 
-    public void setResourceURI(String resourceURI) {
-        this.resourceURI = resourceURI;
+    public void setThumbnail(Thumbnail thumbnail) {
+        this.thumbnail = thumbnail;
     }
-
-
 }
