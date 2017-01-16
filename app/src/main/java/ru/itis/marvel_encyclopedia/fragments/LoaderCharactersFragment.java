@@ -28,7 +28,9 @@ public class LoaderCharactersFragment extends Fragment {
     private TaskInterface mTaskInterface;
     private AsyncTaskGetCharacters myAsync;
 
-    public boolean isRunning() {return myAsync!=null;}
+    public boolean isRunning() {
+        return myAsync != null;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -42,8 +44,8 @@ public class LoaderCharactersFragment extends Fragment {
         super.onAttach(activity);
     }
 
-    private void setInterface(Context context){
-        if(context instanceof TaskInterface)
+    private void setInterface(Context context) {
+        if (context instanceof TaskInterface)
             mTaskInterface = (TaskInterface) context;
     }
 
@@ -56,55 +58,53 @@ public class LoaderCharactersFragment extends Fragment {
 //        myAsync.execute();
     }
 
-    public void startAsync(int pos, String startSymbols){
-        if(myAsync==null){
-            myAsync = new AsyncTaskGetCharacters(mTaskInterface);
-
+    public void startAsync(int pos, String startSymbols) {
+//        if (myAsync == null) {
+            myAsync = new AsyncTaskGetCharacters();
             myAsync.execute(String.valueOf(pos), startSymbols);
-        }
+//        }
     }
-    public void stopAsync(){
-        if(myAsync!=null){
+
+    public void stopAsync() {
+        if (myAsync != null) {
             myAsync.cancel(true);
-            myAsync=null;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        myAsync=null;
+        myAsync = null;
     }
 
-    private class AsyncTaskGetCharacters extends AsyncTask<String,Void,List<Result>> {
-        private TaskInterface mTaskInterface;
-
-        public AsyncTaskGetCharacters(TaskInterface taskInterface) {
-            this.mTaskInterface = taskInterface;
-        }
+    private class AsyncTaskGetCharacters extends AsyncTask<String, Void, List<Result>> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(mTaskInterface != null) {
+            if (mTaskInterface != null) {
                 mTaskInterface.OnTaskStart();
             }
         }
 
         @Override
         protected List<Result> doInBackground(String... strings) {
+            boolean f;
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://gateway.marvel.com/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             Call<Marvel> charactersCall = null;
             MarvelApi marvelApi = retrofit.create(MarvelApi.class);
-            if(strings[1]==null) {
+            if (strings[1] == null) {
+                f = false;
                 charactersCall = marvelApi.getCharacters(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH, MarvelApi.LIMIT, strings[0]);
+            } else {
+                f = true;
+                charactersCall = marvelApi.getCharactersWithStartSymbols(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH, MarvelApi.LIMIT, strings[0], strings[1]);
             }
-            else charactersCall = marvelApi.getCharactersWithStartSymbols(MarvelApi.TS, MarvelApi.API_KEY, MarvelApi.HASH, MarvelApi.LIMIT, strings[0],strings[1]);
 
-            List<Result> characters=null;
+            List<Result> characters = null;
             try {
 
                 Response<Marvel> response = charactersCall.execute();
@@ -114,21 +114,33 @@ public class LoaderCharactersFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if (f) {
+                characters.add(new Result());
+            }
             return characters;
         }
 
         @Override
         protected void onPostExecute(List<Result> results) {
             super.onPostExecute(results);
-            if(mTaskInterface != null) {
-                mTaskInterface.OnTaskFinish(results);
+            if (mTaskInterface != null) {
+                if (results.get(results.size() - 1).getId() == null) {
+                    results.remove(results.size() - 1);
+                    mTaskInterface.OnTask2Finish(results);
+                } else {
+                    mTaskInterface.OnTaskFinish(results);
+                }
             }
             myAsync = null;
         }
 
         @Override
         protected void onCancelled() {
-            super.onCancelled();
+            myAsync = null;
+        }
+
+        @Override
+        protected void onCancelled(List<Result> results) {
             myAsync = null;
         }
     }

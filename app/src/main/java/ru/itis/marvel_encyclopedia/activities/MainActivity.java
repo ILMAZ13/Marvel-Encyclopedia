@@ -62,4 +62,9 @@ public class MainActivity extends AppCompatActivity implements TaskInterface{
     @Override
     public void OnTaskProgress() {
     }
+
+    @Override
+    public void OnTask2Finish(List<Result> characters) {
+
+    }
 }
