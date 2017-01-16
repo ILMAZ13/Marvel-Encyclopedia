@@ -2,6 +2,7 @@ package ru.itis.marvel_encyclopedia.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +28,13 @@ import ru.itis.marvel_encyclopedia.providers.CharacterProvider;
 
 public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerCharactersAdapter.CharacterViewHolder>{
     List<Result> mCharacters;
-    Activity activity;
+    FragmentActivity fragmentActivity;
     Context context;
 
-    public RecyclerCharactersAdapter(Context context, List<Result> characters, Activity activity){
+    public RecyclerCharactersAdapter(Context context, List<Result> characters, FragmentActivity fragmentActivity){
         this.context=context;
         this.mCharacters = characters;
-        this.activity = activity;
+        this.fragmentActivity = fragmentActivity;
     }
 
     @Override
@@ -54,24 +55,12 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (activity instanceof ListActivity) {
-
                     InfoFragment fragment = new InfoFragment().newInstance(result);
-                    ((ListActivity) activity).getSupportFragmentManager().popBackStack();
-                    ((ListActivity) activity).getSupportFragmentManager().beginTransaction().
+                    fragmentActivity.getSupportFragmentManager().popBackStack();
+                    fragmentActivity.getSupportFragmentManager().beginTransaction().
                             replace(R.id.main_info,
                                     fragment,
                                     InfoFragment.class.getSimpleName()).addToBackStack(null).commit();
-                }
-                if (activity instanceof FavoriteActivity) {
-
-                    InfoFragment fragment = new InfoFragment().newInstance(result);
-                    ((FavoriteActivity) activity).getSupportFragmentManager().popBackStack();
-                    ((FavoriteActivity) activity).getSupportFragmentManager().beginTransaction().
-                            replace(R.id.main_info,
-                                    fragment,
-                                    InfoFragment.class.getSimpleName()).addToBackStack(null).commit();
-                }
             }
         });
         holder.favouriteCharacter.setOnClickListener(new View.OnClickListener() {
