@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -28,6 +29,7 @@ public class ListActivity extends AppCompatActivity implements TaskInterface {
     private EditText etSearch;
     private boolean f = false;
     private FloatingActionButton fab;
+    public Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class ListActivity extends AppCompatActivity implements TaskInterface {
 
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +86,13 @@ public class ListActivity extends AppCompatActivity implements TaskInterface {
 //        else progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void OnTaskFinish(List<Result> characters) {

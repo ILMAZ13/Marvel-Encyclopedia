@@ -3,7 +3,6 @@ package ru.itis.marvel_encyclopedia.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +17,8 @@ import java.util.List;
 
 import ru.itis.marvel_encyclopedia.POJO.Result;
 import ru.itis.marvel_encyclopedia.R;
-import ru.itis.marvel_encyclopedia.activities.FavoriteActivity;
-import ru.itis.marvel_encyclopedia.activities.ListActivity;
 import ru.itis.marvel_encyclopedia.fragments.InfoFragment;
 import ru.itis.marvel_encyclopedia.fragments.LoaderCharactersFragment;
-import ru.itis.marvel_encyclopedia.interfaces.TaskInterface;
 import ru.itis.marvel_encyclopedia.providers.CharacterProvider;
 
 /**
@@ -34,10 +30,10 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
     FragmentActivity fragmentActivity;
     Context context;
 
-    public RecyclerCharactersAdapter(Context context, List<Result> characters, FragmentActivity fragmentActivity) {
+    public RecyclerCharactersAdapter(Context context, List<Result> characters, Activity Activity) {
         this.context = context;
         this.mCharacters = characters;
-        this.fragmentActivity = fragmentActivity;
+        this.fragmentActivity = (FragmentActivity) Activity;
         getAsyncFragment();
     }
 
@@ -59,7 +55,9 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 InfoFragment fragment = new InfoFragment().newInstance(result);
+
                 fragmentActivity.getSupportFragmentManager().popBackStack();
                 fragmentActivity.getSupportFragmentManager().beginTransaction().
                         replace(R.id.main_info,
@@ -72,29 +70,31 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
             @Override
             public void onClick(View view) {
                 Result tempResult = mCharacters.get(position);
-                if(CharacterProvider.getInstance(context).isFavourite(tempResult)){
+                if (CharacterProvider.getInstance(context).isFavourite(tempResult)) {
                     CharacterProvider.getInstance(context).deleteFromFavourite(tempResult);
+                    notifyDataSetChanged();
                 } else {
                     CharacterProvider.getInstance(context).addToFavourite(tempResult);
+                    holder.setChecked(CharacterProvider.getInstance(context).isFavourite(mCharacters.get(position)));
+//                    notifyDataSetChanged();
                 }
-                holder.setChecked(CharacterProvider.getInstance(context).isFavourite(mCharacters.get(position)));
             }
         });
-        if(position == mCharacters.size() - 1){
+        if (position == mCharacters.size() - 1) {
             getAsyncFragment().startAsync(mCharacters.size(), null);
         }
     }
 
-    private LoaderCharactersFragment getAsyncFragment(){
+    private LoaderCharactersFragment getAsyncFragment() {
         LoaderCharactersFragment fragment = (LoaderCharactersFragment) fragmentActivity.getSupportFragmentManager().findFragmentByTag(LoaderCharactersFragment.class.getName() + "a");
-        if(fragment==null){
+        if (fragment == null) {
             fragment = new LoaderCharactersFragment();
             fragmentActivity.getSupportFragmentManager().beginTransaction().add(fragment, LoaderCharactersFragment.class.getName() + "a").commit();
         }
         return fragment;
     }
 
-    public void setData(List<Result> data){
+    public void setData(List<Result> data) {
         mCharacters = data;
         notifyDataSetChanged();
     }
@@ -104,7 +104,7 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
         return mCharacters.size();
     }
 
-    public void updateInformation(List<Result> lastResults){
+    public void updateInformation(List<Result> lastResults) {
         mCharacters.addAll(lastResults);
         notifyDataSetChanged();
     }
