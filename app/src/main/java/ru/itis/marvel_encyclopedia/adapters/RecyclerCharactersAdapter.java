@@ -80,7 +80,7 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
                 holder.setChecked(CharacterProvider.getInstance(context).isFavourite(mCharacters.get(position)));
             }
         });
-        if(position == mCharacters.size() - 5){
+        if(position == mCharacters.size() - 1){
             getAsyncFragment().startAsync(mCharacters.size(), null);
         }
     }
@@ -92,6 +92,11 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
             fragmentActivity.getSupportFragmentManager().beginTransaction().add(fragment, LoaderCharactersFragment.class.getName() + "a").commit();
         }
         return fragment;
+    }
+
+    public void setData(List<Result> data){
+        mCharacters = data;
+        notifyDataSetChanged();
     }
 
     @Override

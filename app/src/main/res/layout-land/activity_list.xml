@@ -1,25 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_characters"
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <EditText
+                android:layout_marginEnd="16dp"
+                android:id="@+id/et_search"
+                android:background="@android:color/white"
+                android:textSize="26sp"
+                android:hint="Начните вводить имя..."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-
-    </android.support.v7.widget.RecyclerView>
+        android:orientation="horizontal">
 
 
-    <FrameLayout
-        android:id="@+id/main_info"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_characters"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-    </FrameLayout>
+        </android.support.v7.widget.RecyclerView>
 
 
-</LinearLayout>
+        <FrameLayout
+            android:id="@+id/main_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

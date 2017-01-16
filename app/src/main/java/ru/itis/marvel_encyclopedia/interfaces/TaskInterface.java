@@ -12,4 +12,5 @@ public interface TaskInterface {
     void OnTaskFinish(List<Result> characters);
     void OnTaskStart();
     void OnTaskProgress();
+    void OnTask2Finish(List<Result> characters);
 }
