@@ -2,6 +2,7 @@ package ru.itis.marvel_encyclopedia.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,13 +27,14 @@ public class ListActivity extends AppCompatActivity implements TaskInterface {
     private RecyclerCharactersAdapter adapter;
     private EditText etSearch;
     private boolean f = false;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         characters = (List<Result>) intent.getSerializableExtra("characters");
         rv = (RecyclerView) findViewById(R.id.recycler_view_characters);
         adapter = new RecyclerCharactersAdapter(ListActivity.this, characters, this);
@@ -40,6 +42,15 @@ public class ListActivity extends AppCompatActivity implements TaskInterface {
 
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(ListActivity.this, FavoriteActivity.class);
+                startActivity(intent1);
+            }
+        });
 
         etSearch = (EditText) findViewById(R.id.et_search);
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -75,12 +86,14 @@ public class ListActivity extends AppCompatActivity implements TaskInterface {
 
     @Override
     public void OnTaskFinish(List<Result> characters) {
-        adapter.updateInformation(characters);
+        if(!f) {
+            adapter.updateInformation(characters);
+        }
     }
 
     @Override
     public void OnTaskStart() {
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
 
     }
 

@@ -32,8 +32,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="horizontal">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_characters"
@@ -54,4 +61,12 @@
 
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_margin="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:layout_gravity="end|bottom"/>
 </android.support.design.widget.CoordinatorLayout>

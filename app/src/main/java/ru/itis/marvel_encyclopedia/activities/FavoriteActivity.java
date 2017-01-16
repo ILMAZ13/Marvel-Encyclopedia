@@ -2,6 +2,7 @@ package ru.itis.marvel_encyclopedia.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -19,8 +20,9 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
         rv = (RecyclerView) findViewById(R.id.fav_list);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Result> characters = CharacterProvider.getInstance(this).getCharacters();
+        List<Result> characters = CharacterProvider.getInstance(this).getFavouriteResults();
         RecyclerCharactersAdapter adapter = new RecyclerCharactersAdapter(this, characters ,FavoriteActivity.this);
         rv.setAdapter(adapter);
     }

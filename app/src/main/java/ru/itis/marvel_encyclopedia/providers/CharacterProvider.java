@@ -27,7 +27,7 @@ public class CharacterProvider {
     private Context context;
 
     public CharacterProvider(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public static CharacterProvider getInstance(@NonNull Context context) {
@@ -62,6 +62,11 @@ public class CharacterProvider {
         String jsonText = gson.toJson(cities, listType);
         editor.putString(PREFERENCES_NAME, jsonText);
         editor.commit();
+    }
+
+    public List<Result> getFavouriteResults(){
+        updateTemporaryResults();
+        return temporaryFavouriteResults;
     }
 
 
