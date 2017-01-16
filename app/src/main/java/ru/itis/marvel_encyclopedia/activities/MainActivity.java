@@ -21,13 +21,14 @@ import ru.itis.marvel_encyclopedia.interfaces.TaskInterface;
  */
 
 public class MainActivity extends AppCompatActivity implements TaskInterface{
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
 
+        if (getAsyncFragment().isRunning()) {
 
+        }
     }
 
     @Override
