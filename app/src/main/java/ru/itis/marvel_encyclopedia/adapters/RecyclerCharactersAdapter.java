@@ -27,13 +27,13 @@ import ru.itis.marvel_encyclopedia.providers.CharacterProvider;
  * Created by Anatoly on 15.01.2017.
  */
 
-public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerCharactersAdapter.CharacterViewHolder>{
+public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerCharactersAdapter.CharacterViewHolder> {
     List<Result> mCharacters;
     FragmentActivity fragmentActivity;
     Context context;
 
-    public RecyclerCharactersAdapter(Context context, List<Result> characters, FragmentActivity fragmentActivity){
-        this.context=context;
+    public RecyclerCharactersAdapter(Context context, List<Result> characters, FragmentActivity fragmentActivity) {
+        this.context = context;
         this.mCharacters = characters;
         this.fragmentActivity = fragmentActivity;
     }
@@ -41,34 +41,40 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
     @Override
     public CharacterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.character_item ,
+                R.layout.character_item,
                 parent,
                 false
         );
-        return new CharacterViewHolder(view) ;
+        return new CharacterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final CharacterViewHolder holder, int position) {
+    public void onBindViewHolder(final CharacterViewHolder holder, final int position) {
         final Result result = mCharacters.get(position);
         holder.nameCharacter.setText(result.getName());
-        Glide.with(context).load(result.getThumbnail().getPath()+"/standard_fantastic."+result.getThumbnail().getExtension()).fitCenter().into(holder.imgCharacter);
+        Glide.with(context).load(result.getThumbnail().getPath() + "/standard_fantastic." + result.getThumbnail().getExtension()).fitCenter().into(holder.imgCharacter);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    InfoFragment fragment = new InfoFragment().newInstance(result);
-                    fragmentActivity.getSupportFragmentManager().popBackStack();
-                    fragmentActivity.getSupportFragmentManager().beginTransaction().
-                            replace(R.id.main_info,
-                                    fragment,
-                                    InfoFragment.class.getSimpleName()).addToBackStack(null).commit();
+                InfoFragment fragment = new InfoFragment().newInstance(result);
+                fragmentActivity.getSupportFragmentManager().popBackStack();
+                fragmentActivity.getSupportFragmentManager().beginTransaction().
+                        replace(R.id.main_info,
+                                fragment,
+                                InfoFragment.class.getSimpleName()).addToBackStack(null).commit();
             }
         });
+        holder.setChecked(CharacterProvider.getInstance(context).isFavourite(mCharacters.get(position)));
         holder.favouriteCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CharacterProvider.getInstance(context).addCharacter(result);
-                holder.favouriteCharacter.setImageResource(R.drawable.ic_star_black_24dp);
+                Result tempResult = mCharacters.get(position);
+                if(CharacterProvider.getInstance(context).isFavourite(tempResult)){
+                    CharacterProvider.getInstance(context).deleteFromFavourite(tempResult);
+                } else {
+                    CharacterProvider.getInstance(context).addToFavourite(tempResult);
+                }
+                holder.setChecked(CharacterProvider.getInstance(context).isFavourite(mCharacters.get(position)));
             }
         });
     }
@@ -78,16 +84,24 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
         return mCharacters.size();
     }
 
-    public class CharacterViewHolder extends RecyclerView.ViewHolder{
+    public class CharacterViewHolder extends RecyclerView.ViewHolder {
         TextView nameCharacter;
         ImageView imgCharacter;
         ImageButton favouriteCharacter;
+
         public CharacterViewHolder(View itemView) {
             super(itemView);
             nameCharacter = (TextView) itemView.findViewById(R.id.name_character);
             imgCharacter = (ImageView) itemView.findViewById(R.id.character_img);
             favouriteCharacter = (ImageButton) itemView.findViewById(R.id.favourite);
+        }
 
+        public void setChecked(boolean f) {
+            if (f) {
+                favouriteCharacter.setImageResource(R.drawable.ic_star_black_24dp);
+            } else {
+                favouriteCharacter.setImageResource(R.mipmap.ic_star);
+            }
         }
 
     }

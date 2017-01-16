@@ -20,12 +20,14 @@ import ru.itis.marvel_encyclopedia.POJO.Result;
 public class CharacterProvider {
     public static final String CHARACTER_PREFERENCES = "CharactersList";
     public static final String PREFERENCES_NAME = "CharacterName";
+    public static final String FAVOURITE_CHARACTERS = "FAVOURITE_CHARACTERS";
+    private List<Result> temporaryFavouriteResults;
 
     private static CharacterProvider sInstance;
     private Context context;
 
     public CharacterProvider(Context context) {
-        this.context=context;
+        this.context = context;
     }
 
     public static CharacterProvider getInstance(@NonNull Context context) {
@@ -34,7 +36,8 @@ public class CharacterProvider {
         }
         return sInstance;
     }
-    public List <Result> getCharacters(){
+
+    public List<Result> getCharacters() {
         SharedPreferences preferences = context.getSharedPreferences(CHARACTER_PREFERENCES, Context.MODE_PRIVATE);
         if (preferences.contains(PREFERENCES_NAME)) {
             Gson gson = new Gson();
@@ -49,6 +52,7 @@ public class CharacterProvider {
             return characters;
         }
     }
+
     public void saveCharacters(List<Result> cities) {
         SharedPreferences preferences = context.getSharedPreferences(CHARACTER_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -67,4 +71,43 @@ public class CharacterProvider {
         saveCharacters(characters);
     }
 
+    public void addToFavourite(Result character) {
+        if(temporaryFavouriteResults == null){
+            updateTemporaryResults();
+        }
+        temporaryFavouriteResults.add(character);
+        SharedPreferences preferences = context.getSharedPreferences(CHARACTER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Type listType = new TypeToken<ArrayList<Result>>(){}.getType();
+        editor.putString(FAVOURITE_CHARACTERS, new Gson().toJson(temporaryFavouriteResults, listType));
+        editor.apply();
+    }
+
+    public boolean isFavourite(Result character) {
+        if(temporaryFavouriteResults == null){
+            updateTemporaryResults();
+        }
+        return temporaryFavouriteResults.contains(character);
+    }
+
+    public void deleteFromFavourite(Result character) {
+        if(temporaryFavouriteResults == null){
+            updateTemporaryResults();
+        }
+        temporaryFavouriteResults.remove(character);
+        SharedPreferences preferences = context.getSharedPreferences(CHARACTER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Type listType = new TypeToken<ArrayList<Result>>(){}.getType();
+        editor.putString(FAVOURITE_CHARACTERS, new Gson().toJson(temporaryFavouriteResults, listType));
+        editor.apply();
+    }
+
+    private void updateTemporaryResults(){
+        SharedPreferences preferences = context.getSharedPreferences(CHARACTER_PREFERENCES, Context.MODE_PRIVATE);
+        Type listType = new TypeToken<ArrayList<Result>>(){}.getType();
+        temporaryFavouriteResults = new Gson().fromJson(preferences.getString(FAVOURITE_CHARACTERS, ""), listType);
+        if (temporaryFavouriteResults == null){
+            temporaryFavouriteResults = new ArrayList<>();
+        }
+    }
 }

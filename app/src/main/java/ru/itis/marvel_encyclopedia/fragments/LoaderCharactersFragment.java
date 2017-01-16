@@ -54,7 +54,6 @@ public class LoaderCharactersFragment extends Fragment {
     public void stopAsync(){
         if(myAsync!=null){
             myAsync.cancel(true);
-            //TODO нижняя строка возможно не нужна
             myAsync=null;
         }
     }

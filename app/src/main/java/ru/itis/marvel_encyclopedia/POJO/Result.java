@@ -65,4 +65,17 @@ public class Result implements Serializable {
     public void setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Result){
+            return ((Result) obj).id.equals(this.id);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
