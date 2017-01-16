@@ -29,10 +29,10 @@ public class ListActivity extends AppCompatActivity implements TaskInterface{
         Intent intent = getIntent();
         characters = (List<Result>) intent.getSerializableExtra("characters");
         rv = (RecyclerView) findViewById(R.id.recycler_view_characters);
-        RecyclerCharactersAdapter adapter = new RecyclerCharactersAdapter(ListActivity.this, characters);
+        RecyclerCharactersAdapter adapter = new RecyclerCharactersAdapter(ListActivity.this, characters, this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
+        rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(adapter);
 
 //        if(getAsyncFragment().isRunning()){
