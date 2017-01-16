@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements TaskInterface{
     @Override
     protected void onStart() {
         super.onStart();
-        // else
         getAsyncFragment().startAsync(0, null);
     }
 
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements TaskInterface{
 
     @Override
     public void OnTaskFinish(List<Result> characters) {
-        Toast.makeText(this, "Finish!!", Toast.LENGTH_LONG).show();
         getAsyncFragment().stopAsync();
         Intent intent = new Intent(this, ListActivity.class);
         intent.putExtra("characters", (Serializable) characters);
@@ -59,11 +57,9 @@ public class MainActivity extends AppCompatActivity implements TaskInterface{
 
     @Override
     public void OnTaskStart() {
-        Toast.makeText(this, "Start!!", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void OnTaskProgress() {
-
     }
 }
