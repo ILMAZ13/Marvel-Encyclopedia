@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements TaskInterface{
         Intent intent = new Intent(this, ListActivity.class);
         intent.putExtra("characters", (Serializable) characters);
         startActivity(intent);
+        finish();
     }
 
     @Override

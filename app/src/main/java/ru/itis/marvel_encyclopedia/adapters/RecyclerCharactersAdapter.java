@@ -3,6 +3,7 @@ package ru.itis.marvel_encyclopedia.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
     }
 
     @Override
-    public void onBindViewHolder(CharacterViewHolder holder, int position) {
+    public void onBindViewHolder(final CharacterViewHolder holder, int position) {
         final Result result = mCharacters.get(position);
         holder.nameCharacter.setText(result.getName());
         Glide.with(context).load(result.getThumbnail().getPath()+"/standard_fantastic."+result.getThumbnail().getExtension()).fitCenter().into(holder.imgCharacter);
@@ -67,6 +68,7 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
             @Override
             public void onClick(View view) {
                 CharacterProvider.getInstance(context).addCharacter(result);
+                holder.favouriteCharacter.setImageResource(R.drawable.ic_star_black_24dp);
             }
         });
     }
