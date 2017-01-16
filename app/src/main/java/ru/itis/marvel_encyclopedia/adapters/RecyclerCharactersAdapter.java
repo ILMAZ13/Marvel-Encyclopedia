@@ -21,6 +21,8 @@ import ru.itis.marvel_encyclopedia.R;
 import ru.itis.marvel_encyclopedia.activities.FavoriteActivity;
 import ru.itis.marvel_encyclopedia.activities.ListActivity;
 import ru.itis.marvel_encyclopedia.fragments.InfoFragment;
+import ru.itis.marvel_encyclopedia.fragments.LoaderCharactersFragment;
+import ru.itis.marvel_encyclopedia.interfaces.TaskInterface;
 import ru.itis.marvel_encyclopedia.providers.CharacterProvider;
 
 /**
@@ -36,6 +38,7 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
         this.context = context;
         this.mCharacters = characters;
         this.fragmentActivity = fragmentActivity;
+        getAsyncFragment();
     }
 
     @Override
@@ -77,12 +80,30 @@ public class RecyclerCharactersAdapter extends RecyclerView.Adapter<RecyclerChar
                 holder.setChecked(CharacterProvider.getInstance(context).isFavourite(mCharacters.get(position)));
             }
         });
+        if(position == mCharacters.size() - 5){
+            getAsyncFragment().startAsync(mCharacters.size(), null);
+        }
+    }
+
+    private LoaderCharactersFragment getAsyncFragment(){
+        LoaderCharactersFragment fragment = (LoaderCharactersFragment) fragmentActivity.getSupportFragmentManager().findFragmentByTag(LoaderCharactersFragment.class.getName() + "a");
+        if(fragment==null){
+            fragment = new LoaderCharactersFragment();
+            fragmentActivity.getSupportFragmentManager().beginTransaction().add(fragment, LoaderCharactersFragment.class.getName() + "a").commit();
+        }
+        return fragment;
     }
 
     @Override
     public int getItemCount() {
         return mCharacters.size();
     }
+
+    public void updateInformation(List<Result> lastResults){
+        mCharacters.addAll(lastResults);
+        notifyDataSetChanged();
+    }
+
 
     public class CharacterViewHolder extends RecyclerView.ViewHolder {
         TextView nameCharacter;

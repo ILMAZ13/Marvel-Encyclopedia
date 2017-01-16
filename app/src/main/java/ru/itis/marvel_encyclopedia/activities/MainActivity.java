@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements TaskInterface{
     protected void onStart() {
         super.onStart();
         // else
-        getAsyncFragment().startAsync();
+        getAsyncFragment().startAsync(0, null);
     }
 
     private LoaderCharactersFragment getAsyncFragment(){

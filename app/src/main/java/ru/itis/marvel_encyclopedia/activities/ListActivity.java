@@ -20,6 +20,7 @@ public class ListActivity extends AppCompatActivity implements TaskInterface{
     private RecyclerView rv;
     private ProgressBar progressBar;
     private List<Result> characters;
+    private RecyclerCharactersAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class ListActivity extends AppCompatActivity implements TaskInterface{
         Intent intent = getIntent();
         characters = (List<Result>) intent.getSerializableExtra("characters");
         rv = (RecyclerView) findViewById(R.id.recycler_view_characters);
-        RecyclerCharactersAdapter adapter = new RecyclerCharactersAdapter(ListActivity.this, characters, this);
+        adapter = new RecyclerCharactersAdapter(ListActivity.this, characters, this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -45,8 +46,7 @@ public class ListActivity extends AppCompatActivity implements TaskInterface{
 
     @Override
     public void OnTaskFinish(List<Result> characters) {
-
-
+        adapter.updateInformation(characters);
     }
 
     @Override

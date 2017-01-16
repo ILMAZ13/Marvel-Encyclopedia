@@ -16,8 +16,13 @@ public interface MarvelApi {
     String TS="100";
     String API_KEY ="dc882b9b1456762ea3aec434fd1278d2";
     String HASH ="ec6b198f90393d8f65cdaf8f4aa61043";
-    String LIMIT="100";
+    String LIMIT="30";
 
     @GET("v1/public/characters")
-    Call<Marvel> getCharacters (@Query("ts") String ts, @Query("apikey") String key, @Query("hash") String hash, @Query("limit") String limit);
+    Call<Marvel> getCharacters (@Query("ts") String ts, @Query("apikey") String key, @Query("hash") String hash,
+                                @Query("limit") String limit, @Query("offset")String offset);
+
+    @GET("v1/public/characters")
+    Call<Marvel> getCharactersWithStartSymbols (@Query("ts") String ts, @Query("apikey") String key, @Query("hash") String hash,
+                                @Query("limit") String limit, @Query("offset")String offset, @Query("nameStartsWith") String startSymbols);
 }
